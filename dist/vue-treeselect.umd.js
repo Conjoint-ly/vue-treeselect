@@ -4392,7 +4392,7 @@ var directionMap = {
     renderAsyncSearchMenuInner: function renderAsyncSearchMenuInner() {
       var instance = this.instance;
       var entry = instance.getRemoteSearchEntry();
-      var shouldShowSearchPromptTip = instance.trigger.searchQuery === '' && !instance.defaultOptions;
+      var shouldShowSearchPromptTip = instance.trigger.searchQuery === '' && !instance.defaultOptions && instance.searchPromptText;
       var shouldShowNoResultsTip = shouldShowSearchPromptTip ? false : entry.isLoaded && entry.options.length === 0;
       if (shouldShowSearchPromptTip) {
         return this.renderSearchPromptTip();

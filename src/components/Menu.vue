@@ -129,7 +129,9 @@
       renderAsyncSearchMenuInner() {
         const { instance } = this
         const entry = instance.getRemoteSearchEntry()
-        const shouldShowSearchPromptTip = instance.trigger.searchQuery === '' && !instance.defaultOptions
+        const shouldShowSearchPromptTip = instance.trigger.searchQuery === ''
+          && !instance.defaultOptions
+          && instance.searchPromptText
         const shouldShowNoResultsTip = shouldShowSearchPromptTip
           ? false
           : entry.isLoaded && entry.options.length === 0
