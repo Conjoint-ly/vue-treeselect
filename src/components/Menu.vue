@@ -155,6 +155,23 @@
             {instance.forest.normalizedOptions.map(rootNode => (
               <Option node={rootNode} key={rootNode.id} />
             ))}
+            {this.renderOptionsLimitText()}
+          </div>
+        )
+      },
+
+      renderOptionsLimitText() {
+        if (!this.optionsLimit) {
+          return null
+        }
+        const diff = this.visibleOptionIdsNotLimited.length - this.visibleOptionIds.length;
+        if (diff <= 0) {
+          return null
+        }
+
+        return (
+          <div class="vue-treeselect__options-limit-text ml-2 text-muted">
+            {this.optionsLimitText(diff)}
           </div>
         )
       },
