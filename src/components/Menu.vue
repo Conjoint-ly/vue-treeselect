@@ -164,7 +164,7 @@
         if (!this.optionsLimit) {
           return null
         }
-        const diff = this.visibleOptionIdsNotLimited.length - this.visibleOptionIds.length;
+        const diff = this.visibleOptionIdsNotLimited.length - this.visibleOptionIds.length
         if (diff <= 0) {
           return null
         }

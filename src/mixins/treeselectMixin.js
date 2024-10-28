@@ -490,7 +490,7 @@ export default {
      */
     optionsLimitText: {
       type: Function,
-      default: function (count) {
+      default: function limitOptionsTextDefault(count) { // eslint-disable-line func-name-matching
         return `...and ${count} more`
       },
     },
@@ -788,7 +788,7 @@ export default {
      * @type {id[]}
      */
     visibleOptionIds() {
-      const visibleOptionIds = this.visibleOptionIdsNotLimited;
+      const visibleOptionIds = this.visibleOptionIdsNotLimited
 
       if (this.optionsLimit) {
         return visibleOptionIds.slice(0, this.optionsLimit)
@@ -816,7 +816,7 @@ export default {
         }
       })
 
-      return visibleOptionIds;
+      return visibleOptionIds
     },
     /**
      * Map of visible option ids.
@@ -828,7 +828,7 @@ export default {
       }
 
       return this.visibleOptionIds.reduce((acc, id) => {
-          return {...acc, [id]: true}
+        return { ...acc, [id]: true }
       }, {})
     },
     /**
@@ -1409,7 +1409,7 @@ export default {
         return false
       }
       if (this.optionsLimit) {
-        return Boolean(this.visibleOptionIdsMap[node.id]);
+        return Boolean(this.visibleOptionIdsMap[node.id])
       }
 
       return true
