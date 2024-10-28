@@ -745,6 +745,15 @@ var instanceId = 0;
     options: {
       type: Array
     },
+    optionsLimit: {
+      type: Number
+    },
+    optionsLimitText: {
+      type: Function,
+      default: function limitOptionsTextDefault(count) {
+        return "...and ".concat(count, " more");
+      }
+    },
     placeholder: {
       type: String,
       default: 'Select...'
@@ -901,6 +910,13 @@ var instanceId = 0;
       return !this.multiple;
     },
     visibleOptionIds: function visibleOptionIds() {
+      var visibleOptionIds = this.visibleOptionIdsNotLimited;
+      if (this.optionsLimit) {
+        return visibleOptionIds.slice(0, this.optionsLimit);
+      }
+      return visibleOptionIds;
+    },
+    visibleOptionIdsNotLimited: function visibleOptionIdsNotLimited() {
       var _this2 = this;
       var visibleOptionIds = [];
       this.traverseAllNodesByIndex(function (node) {
@@ -912,6 +928,14 @@ var instanceId = 0;
         }
       });
       return visibleOptionIds;
+    },
+    visibleOptionIdsMap: function visibleOptionIdsMap() {
+      if (!this.visibleOptionIds) {
+        return {};
+      }
+      return this.visibleOptionIds.reduce(function (acc, id) {
+        return _objectSpread(_objectSpread({}, acc), {}, defineProperty_default()({}, id, true));
+      }, {});
     },
     hasVisibleOptions: function hasVisibleOptions() {
       return this.visibleOptionIds.length !== 0;
@@ -1172,14 +1196,14 @@ var instanceId = 0;
       });
     },
     traverseAllNodesByIndex: function traverseAllNodesByIndex(callback) {
-      var walk = function walk(parentNode) {
+      var _walk = function walk(parentNode) {
         parentNode.children.forEach(function (child) {
           if (callback(child) !== false && child.isBranch) {
-            walk(child);
+            _walk(child);
           }
         });
       };
-      walk({
+      _walk({
         children: this.forest.normalizedOptions
       });
     },
@@ -1356,6 +1380,9 @@ var instanceId = 0;
     shouldShowOptionInMenu: function shouldShowOptionInMenu(node) {
       if (this.localSearch.active && !this.shouldOptionBeIncludedInSearchResult(node)) {
         return false;
+      }
+      if (this.optionsLimit) {
+        return Boolean(this.visibleOptionIdsMap[node.id]);
       }
       return true;
     },
@@ -3238,7 +3265,20 @@ var directionMap = {
           },
           key: rootNode.id
         });
-      })]);
+      }), this.renderOptionsLimitText()]);
+    },
+    renderOptionsLimitText: function renderOptionsLimitText() {
+      var h = this.$createElement;
+      if (!this.optionsLimit) {
+        return null;
+      }
+      var diff = this.visibleOptionIdsNotLimited.length - this.visibleOptionIds.length;
+      if (diff <= 0) {
+        return null;
+      }
+      return h("div", {
+        "class": "vue-treeselect__options-limit-text ml-2 text-muted"
+      }, [this.optionsLimitText(diff)]);
     },
     renderSearchPromptTip: function renderSearchPromptTip() {
       var h = this.$createElement;

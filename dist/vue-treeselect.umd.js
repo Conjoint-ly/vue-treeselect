@@ -107,8 +107,8 @@ var arrayWithHoles = __webpack_require__(1);
 var iterableToArrayLimit = __webpack_require__(2);
 var unsupportedIterableToArray = __webpack_require__(3);
 var nonIterableRest = __webpack_require__(5);
-function _slicedToArray(arr, i) {
-  return arrayWithHoles(arr) || iterableToArrayLimit(arr, i) || unsupportedIterableToArray(arr, i) || nonIterableRest();
+function _slicedToArray(r, e) {
+  return arrayWithHoles(r) || iterableToArrayLimit(r, e) || unsupportedIterableToArray(r, e) || nonIterableRest();
 }
 module.exports = _slicedToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
@@ -116,8 +116,8 @@ module.exports = _slicedToArray, module.exports.__esModule = true, module.export
 /* 1 */
 /***/ (function(module, exports) {
 
-function _arrayWithHoles(arr) {
-  if (Array.isArray(arr)) return arr;
+function _arrayWithHoles(r) {
+  if (Array.isArray(r)) return r;
 }
 module.exports = _arrayWithHoles, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
@@ -159,13 +159,12 @@ module.exports = _iterableToArrayLimit, module.exports.__esModule = true, module
 /***/ (function(module, exports, __webpack_require__) {
 
 var arrayLikeToArray = __webpack_require__(4);
-function _unsupportedIterableToArray(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return arrayLikeToArray(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return arrayLikeToArray(o, minLen);
+function _unsupportedIterableToArray(r, a) {
+  if (r) {
+    if ("string" == typeof r) return arrayLikeToArray(r, a);
+    var t = {}.toString.call(r).slice(8, -1);
+    return "Object" === t && r.constructor && (t = r.constructor.name), "Map" === t || "Set" === t ? Array.from(r) : "Arguments" === t || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(t) ? arrayLikeToArray(r, a) : void 0;
+  }
 }
 module.exports = _unsupportedIterableToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
@@ -173,10 +172,10 @@ module.exports = _unsupportedIterableToArray, module.exports.__esModule = true, 
 /* 4 */
 /***/ (function(module, exports) {
 
-function _arrayLikeToArray(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
-  return arr2;
+function _arrayLikeToArray(r, a) {
+  (null == a || a > r.length) && (a = r.length);
+  for (var e = 0, n = Array(a); e < a; e++) n[e] = r[e];
+  return n;
 }
 module.exports = _arrayLikeToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
@@ -197,8 +196,8 @@ var arrayWithoutHoles = __webpack_require__(7);
 var iterableToArray = __webpack_require__(8);
 var unsupportedIterableToArray = __webpack_require__(3);
 var nonIterableSpread = __webpack_require__(9);
-function _toConsumableArray(arr) {
-  return arrayWithoutHoles(arr) || iterableToArray(arr) || unsupportedIterableToArray(arr) || nonIterableSpread();
+function _toConsumableArray(r) {
+  return arrayWithoutHoles(r) || iterableToArray(r) || unsupportedIterableToArray(r) || nonIterableSpread();
 }
 module.exports = _toConsumableArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
@@ -207,8 +206,8 @@ module.exports = _toConsumableArray, module.exports.__esModule = true, module.ex
 /***/ (function(module, exports, __webpack_require__) {
 
 var arrayLikeToArray = __webpack_require__(4);
-function _arrayWithoutHoles(arr) {
-  if (Array.isArray(arr)) return arrayLikeToArray(arr);
+function _arrayWithoutHoles(r) {
+  if (Array.isArray(r)) return arrayLikeToArray(r);
 }
 module.exports = _arrayWithoutHoles, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
@@ -216,8 +215,8 @@ module.exports = _arrayWithoutHoles, module.exports.__esModule = true, module.ex
 /* 8 */
 /***/ (function(module, exports) {
 
-function _iterableToArray(iter) {
-  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+function _iterableToArray(r) {
+  if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r);
 }
 module.exports = _iterableToArray, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
@@ -235,19 +234,13 @@ module.exports = _nonIterableSpread, module.exports.__esModule = true, module.ex
 /***/ (function(module, exports, __webpack_require__) {
 
 var toPropertyKey = __webpack_require__(11);
-function _defineProperty(obj, key, value) {
-  key = toPropertyKey(key);
-  if (key in obj) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-  } else {
-    obj[key] = value;
-  }
-  return obj;
+function _defineProperty(e, r, t) {
+  return (r = toPropertyKey(r)) in e ? Object.defineProperty(e, r, {
+    value: t,
+    enumerable: !0,
+    configurable: !0,
+    writable: !0
+  }) : e[r] = t, e;
 }
 module.exports = _defineProperty, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
@@ -259,7 +252,7 @@ var _typeof = __webpack_require__(12)["default"];
 var toPrimitive = __webpack_require__(13);
 function toPropertyKey(t) {
   var i = toPrimitive(t, "string");
-  return "symbol" == _typeof(i) ? i : String(i);
+  return "symbol" == _typeof(i) ? i : i + "";
 }
 module.exports = toPropertyKey, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
@@ -270,11 +263,11 @@ module.exports = toPropertyKey, module.exports.__esModule = true, module.exports
 function _typeof(o) {
   "@babel/helpers - typeof";
 
-  return (module.exports = _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
+  return module.exports = _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (o) {
     return typeof o;
   } : function (o) {
     return o && "function" == typeof Symbol && o.constructor === Symbol && o !== Symbol.prototype ? "symbol" : typeof o;
-  }, module.exports.__esModule = true, module.exports["default"] = module.exports), _typeof(o);
+  }, module.exports.__esModule = true, module.exports["default"] = module.exports, _typeof(o);
 }
 module.exports = _typeof, module.exports.__esModule = true, module.exports["default"] = module.exports;
 
@@ -1925,6 +1918,15 @@ var instanceId = 0;
     options: {
       type: Array
     },
+    optionsLimit: {
+      type: Number
+    },
+    optionsLimitText: {
+      type: Function,
+      default: function limitOptionsTextDefault(count) {
+        return "...and ".concat(count, " more");
+      }
+    },
     placeholder: {
       type: String,
       default: 'Select...'
@@ -2081,6 +2083,13 @@ var instanceId = 0;
       return !this.multiple;
     },
     visibleOptionIds: function visibleOptionIds() {
+      var visibleOptionIds = this.visibleOptionIdsNotLimited;
+      if (this.optionsLimit) {
+        return visibleOptionIds.slice(0, this.optionsLimit);
+      }
+      return visibleOptionIds;
+    },
+    visibleOptionIdsNotLimited: function visibleOptionIdsNotLimited() {
       var _this2 = this;
       var visibleOptionIds = [];
       this.traverseAllNodesByIndex(function (node) {
@@ -2092,6 +2101,14 @@ var instanceId = 0;
         }
       });
       return visibleOptionIds;
+    },
+    visibleOptionIdsMap: function visibleOptionIdsMap() {
+      if (!this.visibleOptionIds) {
+        return {};
+      }
+      return this.visibleOptionIds.reduce(function (acc, id) {
+        return _objectSpread(_objectSpread({}, acc), {}, defineProperty_default()({}, id, true));
+      }, {});
     },
     hasVisibleOptions: function hasVisibleOptions() {
       return this.visibleOptionIds.length !== 0;
@@ -2352,14 +2369,14 @@ var instanceId = 0;
       });
     },
     traverseAllNodesByIndex: function traverseAllNodesByIndex(callback) {
-      var walk = function walk(parentNode) {
+      var _walk = function walk(parentNode) {
         parentNode.children.forEach(function (child) {
           if (callback(child) !== false && child.isBranch) {
-            walk(child);
+            _walk(child);
           }
         });
       };
-      walk({
+      _walk({
         children: this.forest.normalizedOptions
       });
     },
@@ -2536,6 +2553,9 @@ var instanceId = 0;
     shouldShowOptionInMenu: function shouldShowOptionInMenu(node) {
       if (this.localSearch.active && !this.shouldOptionBeIncludedInSearchResult(node)) {
         return false;
+      }
+      if (this.optionsLimit) {
+        return Boolean(this.visibleOptionIdsMap[node.id]);
       }
       return true;
     },
@@ -4418,7 +4438,20 @@ var directionMap = {
           },
           key: rootNode.id
         });
-      })]);
+      }), this.renderOptionsLimitText()]);
+    },
+    renderOptionsLimitText: function renderOptionsLimitText() {
+      var h = this.$createElement;
+      if (!this.optionsLimit) {
+        return null;
+      }
+      var diff = this.visibleOptionIdsNotLimited.length - this.visibleOptionIds.length;
+      if (diff <= 0) {
+        return null;
+      }
+      return h("div", {
+        "class": "vue-treeselect__options-limit-text ml-2 text-muted"
+      }, [this.optionsLimitText(diff)]);
     },
     renderSearchPromptTip: function renderSearchPromptTip() {
       var h = this.$createElement;
