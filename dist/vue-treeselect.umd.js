@@ -4442,16 +4442,17 @@ var directionMap = {
     },
     renderOptionsLimitText: function renderOptionsLimitText() {
       var h = this.$createElement;
-      if (!this.optionsLimit) {
+      var instance = this.instance;
+      if (!instance.optionsLimit) {
         return null;
       }
-      var diff = this.visibleOptionIdsNotLimited.length - this.visibleOptionIds.length;
+      var diff = instance.visibleOptionIdsNotLimited.length - instance.visibleOptionIds.length;
       if (diff <= 0) {
         return null;
       }
       return h("div", {
         "class": "vue-treeselect__options-limit-text ml-2 text-muted"
-      }, [this.optionsLimitText(diff)]);
+      }, [instance.optionsLimitText(diff)]);
     },
     renderSearchPromptTip: function renderSearchPromptTip() {
       var h = this.$createElement;

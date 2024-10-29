@@ -161,17 +161,19 @@
       },
 
       renderOptionsLimitText() {
-        if (!this.optionsLimit) {
+        const { instance } = this
+
+        if (!instance.optionsLimit) {
           return null
         }
-        const diff = this.visibleOptionIdsNotLimited.length - this.visibleOptionIds.length
+        const diff = instance.visibleOptionIdsNotLimited.length - instance.visibleOptionIds.length
         if (diff <= 0) {
           return null
         }
 
         return (
           <div class="vue-treeselect__options-limit-text ml-2 text-muted">
-            {this.optionsLimitText(diff)}
+            {instance.optionsLimitText(diff)}
           </div>
         )
       },
