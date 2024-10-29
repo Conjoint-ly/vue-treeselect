@@ -839,7 +839,8 @@ var instanceId = 0;
         isOpen: false,
         current: null,
         lastScrollPosition: 0,
-        placement: 'bottom'
+        placement: 'bottom',
+        limit: null
       },
       forest: {
         normalizedOptions: [],
@@ -911,8 +912,8 @@ var instanceId = 0;
     },
     visibleOptionIds: function visibleOptionIds() {
       var visibleOptionIds = this.visibleOptionIdsNotLimited;
-      if (this.optionsLimit) {
-        return visibleOptionIds.slice(0, this.optionsLimit);
+      if (this.menu.limit) {
+        return visibleOptionIds.slice(0, this.menu.limit);
       }
       return visibleOptionIds;
     },
@@ -1045,6 +1046,7 @@ var instanceId = 0;
       } else {
         this.forest.normalizedOptions = [];
       }
+      this.menu.limit = this.optionsLimit;
     },
     getInstanceId: function getInstanceId() {
       return this.instanceId == null ? this.id : this.instanceId;
@@ -1381,7 +1383,7 @@ var instanceId = 0;
       if (this.localSearch.active && !this.shouldOptionBeIncludedInSearchResult(node)) {
         return false;
       }
-      if (this.optionsLimit) {
+      if (this.menu.limit) {
         return Boolean(this.visibleOptionIdsMap[node.id]);
       }
       return true;
@@ -1445,6 +1447,12 @@ var instanceId = 0;
       if (!this.hasVisibleOptions) return;
       var last = last_default()(this.visibleOptionIds);
       this.setCurrentHighlightedOption(this.getNode(last));
+    },
+    showMoreOptions: function showMoreOptions() {
+      if (!this.optionsLimit) {
+        return;
+      }
+      this.menu.limit += this.optionsLimit;
     },
     resetSearchQuery: function resetSearchQuery() {
       this.trigger.searchQuery = '';
@@ -3270,7 +3278,7 @@ var directionMap = {
     renderOptionsLimitText: function renderOptionsLimitText() {
       var h = this.$createElement;
       var instance = this.instance;
-      if (!instance.optionsLimit) {
+      if (!instance.menu.limit) {
         return null;
       }
       var diff = instance.visibleOptionIdsNotLimited.length - instance.visibleOptionIds.length;
@@ -3278,7 +3286,10 @@ var directionMap = {
         return null;
       }
       return h("div", {
-        "class": "vue-treeselect__options-limit-text ml-2 text-muted"
+        "class": "vue-treeselect__options-limit-text ml-2 text-muted",
+        on: {
+          "click": instance.showMoreOptions
+        }
       }, [instance.optionsLimitText(diff)]);
     },
     renderSearchPromptTip: function renderSearchPromptTip() {

@@ -678,6 +678,8 @@ export default {
         lastScrollPosition: 0,
         // Which direction to open the menu.
         placement: 'bottom',
+        // Limit of shown options.
+        limit: null,
       },
 
       forest: {
@@ -790,8 +792,8 @@ export default {
     visibleOptionIds() {
       const visibleOptionIds = this.visibleOptionIdsNotLimited
 
-      if (this.optionsLimit) {
-        return visibleOptionIds.slice(0, this.optionsLimit)
+      if (this.menu.limit) {
+        return visibleOptionIds.slice(0, this.menu.limit)
       }
 
       return visibleOptionIds
@@ -993,6 +995,9 @@ export default {
       } else {
         this.forest.normalizedOptions = []
       }
+
+      // Set current menu limit of shown options
+      this.menu.limit = this.optionsLimit
     },
 
     getInstanceId() {
@@ -1408,7 +1413,7 @@ export default {
       if (this.localSearch.active && !this.shouldOptionBeIncludedInSearchResult(node)) {
         return false
       }
-      if (this.optionsLimit) {
+      if (this.menu.limit) {
         return Boolean(this.visibleOptionIdsMap[node.id])
       }
 
@@ -1492,6 +1497,14 @@ export default {
 
       const last = getLast(this.visibleOptionIds)
       this.setCurrentHighlightedOption(this.getNode(last))
+    },
+
+    showMoreOptions() {
+      if (!this.optionsLimit) {
+        return
+      }
+
+      this.menu.limit += this.optionsLimit
     },
 
     resetSearchQuery() {

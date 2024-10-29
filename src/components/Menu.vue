@@ -163,7 +163,7 @@
       renderOptionsLimitText() {
         const { instance } = this
 
-        if (!instance.optionsLimit) {
+        if (!instance.menu.limit) {
           return null
         }
         const diff = instance.visibleOptionIdsNotLimited.length - instance.visibleOptionIds.length
@@ -172,7 +172,7 @@
         }
 
         return (
-          <div class="vue-treeselect__options-limit-text ml-2 text-muted">
+          <div class="vue-treeselect__options-limit-text ml-2 text-muted" onClick={instance.showMoreOptions}>
             {instance.optionsLimitText(diff)}
           </div>
         )
