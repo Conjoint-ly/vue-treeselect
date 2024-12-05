@@ -3266,7 +3266,9 @@ var directionMap = {
       var instance = this.instance;
       return h("div", {
         "class": "vue-treeselect__list"
-      }, [instance.forest.normalizedOptions.map(function (rootNode) {
+      }, [instance.forest.normalizedOptions.filter(function (rootNode) {
+        return Boolean(instance.visibleOptionIdsMap[rootNode.id]);
+      }).map(function (rootNode) {
         return h(components_Option, {
           attrs: {
             node: rootNode

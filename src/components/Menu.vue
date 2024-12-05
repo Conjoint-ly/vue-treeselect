@@ -152,7 +152,9 @@
 
         return (
           <div class="vue-treeselect__list">
-            {instance.forest.normalizedOptions.map(rootNode => (
+            {instance.forest.normalizedOptions.filter(rootNode => {
+              return Boolean(instance.visibleOptionIdsMap[rootNode.id])
+            }).map(rootNode => (
               <Option node={rootNode} key={rootNode.id} />
             ))}
             {this.renderOptionsLimitText()}
