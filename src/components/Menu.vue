@@ -149,7 +149,7 @@
 
       renderOptionList() {
         const { instance } = this
-        const visibleOptionsIdsMap = instance.visibleOptionIdsMap;
+        const visibleOptionsIdsMap = instance.visibleOptionIdsMap
 
         return (
           <div class="vue-treeselect__list">
