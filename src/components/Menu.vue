@@ -149,11 +149,12 @@
 
       renderOptionList() {
         const { instance } = this
+        const visibleOptionsIdsMap = instance.visibleOptionIdsMap;
 
         return (
           <div class="vue-treeselect__list">
             {instance.forest.normalizedOptions.filter(rootNode => {
-              return Boolean(instance.visibleOptionIdsMap[rootNode.id])
+              return Boolean(visibleOptionsIdsMap[rootNode.id])
             }).map(rootNode => (
               <Option node={rootNode} key={rootNode.id} />
             ))}

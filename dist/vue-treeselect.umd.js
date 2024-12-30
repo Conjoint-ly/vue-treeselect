@@ -4437,10 +4437,11 @@ var directionMap = {
     renderOptionList: function renderOptionList() {
       var h = this.$createElement;
       var instance = this.instance;
+      var visibleOptionsIdsMap = instance.visibleOptionIdsMap;
       return h("div", {
         "class": "vue-treeselect__list"
       }, [instance.forest.normalizedOptions.filter(function (rootNode) {
-        return Boolean(instance.visibleOptionIdsMap[rootNode.id]);
+        return Boolean(visibleOptionsIdsMap[rootNode.id]);
       }).map(function (rootNode) {
         return h(components_Option, {
           attrs: {
