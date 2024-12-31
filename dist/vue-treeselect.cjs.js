@@ -745,6 +745,15 @@ var instanceId = 0;
     options: {
       type: Array
     },
+    optionsLimit: {
+      type: Number
+    },
+    optionsLimitText: {
+      type: Function,
+      default: function limitOptionsTextDefault(count) {
+        return "...and ".concat(count, " more");
+      }
+    },
     placeholder: {
       type: String,
       default: 'Select...'
@@ -830,7 +839,8 @@ var instanceId = 0;
         isOpen: false,
         current: null,
         lastScrollPosition: 0,
-        placement: 'bottom'
+        placement: 'bottom',
+        limit: null
       },
       forest: {
         normalizedOptions: [],
@@ -901,6 +911,13 @@ var instanceId = 0;
       return !this.multiple;
     },
     visibleOptionIds: function visibleOptionIds() {
+      var visibleOptionIds = this.visibleOptionIdsNotLimited;
+      if (this.menu.limit) {
+        return visibleOptionIds.slice(0, this.menu.limit);
+      }
+      return visibleOptionIds;
+    },
+    visibleOptionIdsNotLimited: function visibleOptionIdsNotLimited() {
       var _this2 = this;
       var visibleOptionIds = [];
       this.traverseAllNodesByIndex(function (node) {
@@ -912,6 +929,14 @@ var instanceId = 0;
         }
       });
       return visibleOptionIds;
+    },
+    visibleOptionIdsMap: function visibleOptionIdsMap() {
+      if (!this.visibleOptionIds) {
+        return {};
+      }
+      return this.visibleOptionIds.reduce(function (acc, id) {
+        return _objectSpread(_objectSpread({}, acc), {}, defineProperty_default()({}, id, true));
+      }, {});
     },
     hasVisibleOptions: function hasVisibleOptions() {
       return this.visibleOptionIds.length !== 0;
@@ -1021,6 +1046,7 @@ var instanceId = 0;
       } else {
         this.forest.normalizedOptions = [];
       }
+      this.menu.limit = this.optionsLimit;
     },
     getInstanceId: function getInstanceId() {
       return this.instanceId == null ? this.id : this.instanceId;
@@ -1172,14 +1198,14 @@ var instanceId = 0;
       });
     },
     traverseAllNodesByIndex: function traverseAllNodesByIndex(callback) {
-      var walk = function walk(parentNode) {
+      var _walk = function walk(parentNode) {
         parentNode.children.forEach(function (child) {
           if (callback(child) !== false && child.isBranch) {
-            walk(child);
+            _walk(child);
           }
         });
       };
-      walk({
+      _walk({
         children: this.forest.normalizedOptions
       });
     },
@@ -1357,6 +1383,9 @@ var instanceId = 0;
       if (this.localSearch.active && !this.shouldOptionBeIncludedInSearchResult(node)) {
         return false;
       }
+      if (this.menu.limit) {
+        return Boolean(this.visibleOptionIdsMap[node.id]);
+      }
       return true;
     },
     getControl: function getControl() {
@@ -1418,6 +1447,12 @@ var instanceId = 0;
       if (!this.hasVisibleOptions) return;
       var last = last_default()(this.visibleOptionIds);
       this.setCurrentHighlightedOption(this.getNode(last));
+    },
+    showMoreOptions: function showMoreOptions() {
+      if (!this.optionsLimit) {
+        return;
+      }
+      this.menu.limit += this.optionsLimit;
     },
     resetSearchQuery: function resetSearchQuery() {
       this.trigger.searchQuery = '';
@@ -3229,16 +3264,36 @@ var directionMap = {
     renderOptionList: function renderOptionList() {
       var h = this.$createElement;
       var instance = this.instance;
+      var visibleOptionsIdsMap = instance.visibleOptionIdsMap;
       return h("div", {
         "class": "vue-treeselect__list"
-      }, [instance.forest.normalizedOptions.map(function (rootNode) {
+      }, [instance.forest.normalizedOptions.filter(function (rootNode) {
+        return Boolean(visibleOptionsIdsMap[rootNode.id]);
+      }).map(function (rootNode) {
         return h(components_Option, {
           attrs: {
             node: rootNode
           },
           key: rootNode.id
         });
-      })]);
+      }), this.renderOptionsLimitText()]);
+    },
+    renderOptionsLimitText: function renderOptionsLimitText() {
+      var h = this.$createElement;
+      var instance = this.instance;
+      if (!instance.menu.limit) {
+        return null;
+      }
+      var diff = instance.visibleOptionIdsNotLimited.length - instance.visibleOptionIds.length;
+      if (diff <= 0) {
+        return null;
+      }
+      return h("div", {
+        "class": "vue-treeselect__options-limit-text ml-2 text-muted",
+        on: {
+          "click": instance.showMoreOptions
+        }
+      }, [instance.optionsLimitText(diff)]);
     },
     renderSearchPromptTip: function renderSearchPromptTip() {
       var h = this.$createElement;

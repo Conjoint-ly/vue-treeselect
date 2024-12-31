@@ -163,7 +163,7 @@
         case KEY_CODES.ARROW_LEFT: {
           const current = instance.getNode(instance.menu.current)
           if (!current) {
-            break;
+            break
           }
           if (current.isBranch && instance.shouldExpand(current)) {
             evt.preventDefault()
@@ -182,7 +182,7 @@
         case KEY_CODES.ARROW_RIGHT: {
           const current = instance.getNode(instance.menu.current)
           if (!current) {
-            break;
+            break
           }
           if (current.isBranch && !instance.shouldExpand(current)) {
             evt.preventDefault()

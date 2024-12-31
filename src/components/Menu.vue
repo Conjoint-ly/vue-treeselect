@@ -149,12 +149,34 @@
 
       renderOptionList() {
         const { instance } = this
+        const visibleOptionsIdsMap = instance.visibleOptionIdsMap
 
         return (
           <div class="vue-treeselect__list">
-            {instance.forest.normalizedOptions.map(rootNode => (
+            {instance.forest.normalizedOptions.filter(rootNode => {
+              return Boolean(visibleOptionsIdsMap[rootNode.id])
+            }).map(rootNode => (
               <Option node={rootNode} key={rootNode.id} />
             ))}
+            {this.renderOptionsLimitText()}
+          </div>
+        )
+      },
+
+      renderOptionsLimitText() {
+        const { instance } = this
+
+        if (!instance.menu.limit) {
+          return null
+        }
+        const diff = instance.visibleOptionIdsNotLimited.length - instance.visibleOptionIds.length
+        if (diff <= 0) {
+          return null
+        }
+
+        return (
+          <div class="vue-treeselect__options-limit-text ml-2 text-muted" onClick={instance.showMoreOptions}>
+            {instance.optionsLimitText(diff)}
           </div>
         )
       },

@@ -479,6 +479,23 @@ export default {
     },
 
     /**
+     * Limit of shown options.
+     */
+    optionsLimit: {
+      type: Number,
+    },
+
+    /**
+     * Text for showing options limit.
+     */
+    optionsLimitText: {
+      type: Function,
+      default: function limitOptionsTextDefault(count) { // eslint-disable-line func-name-matching
+        return `...and ${count} more`
+      },
+    },
+
+    /**
      * Field placeholder, displayed when there's no value.
      */
     placeholder: {
@@ -661,6 +678,8 @@ export default {
         lastScrollPosition: 0,
         // Which direction to open the menu.
         placement: 'bottom',
+        // Limit of shown options.
+        limit: null,
       },
 
       forest: {
@@ -767,11 +786,28 @@ export default {
      *   - in local search mode, nodes that are not matched, unless
      *       - it's a branch node and has matched descendants
      *       - it's a leaf node and its parent node is explicitly set to show all children
+     *       - is limit of shown options reached
      * @type {id[]}
      */
     visibleOptionIds() {
-      const visibleOptionIds = []
+      const visibleOptionIds = this.visibleOptionIdsNotLimited
 
+      if (this.menu.limit) {
+        return visibleOptionIds.slice(0, this.menu.limit)
+      }
+
+      return visibleOptionIds
+    },
+    /**
+     * Id list of nodes displayed in the menu. Nodes that are considered NOT visible:
+     *   - descendants of a collapsed branch node
+     *   - in local search mode, nodes that are not matched, unless
+     *       - it's a branch node and has matched descendants
+     *       - it's a leaf node and its parent node is explicitly set to show all children
+     * @type {id[]}
+     */
+    visibleOptionIdsNotLimited() {
+      const visibleOptionIds = []
       this.traverseAllNodesByIndex(node => {
         if (!this.localSearch.active || this.shouldOptionBeIncludedInSearchResult(node)) {
           visibleOptionIds.push(node.id)
@@ -783,6 +819,19 @@ export default {
       })
 
       return visibleOptionIds
+    },
+    /**
+     * Map of visible option ids.
+     * @type {Object<string, boolean>}
+     */
+    visibleOptionIdsMap() {
+      if (!this.visibleOptionIds) {
+        return {}
+      }
+
+      return this.visibleOptionIds.reduce((acc, id) => {
+        return { ...acc, [id]: true }
+      }, {})
     },
     /**
      * Has any option should be displayed in the menu?
@@ -946,6 +995,9 @@ export default {
       } else {
         this.forest.normalizedOptions = []
       }
+
+      // Set current menu limit of shown options
+      this.menu.limit = this.optionsLimit
     },
 
     getInstanceId() {
@@ -1361,6 +1413,10 @@ export default {
       if (this.localSearch.active && !this.shouldOptionBeIncludedInSearchResult(node)) {
         return false
       }
+      if (this.menu.limit) {
+        return Boolean(this.visibleOptionIdsMap[node.id])
+      }
+
       return true
     },
 
@@ -1441,6 +1497,14 @@ export default {
 
       const last = getLast(this.visibleOptionIds)
       this.setCurrentHighlightedOption(this.getNode(last))
+    },
+
+    showMoreOptions() {
+      if (!this.optionsLimit) {
+        return
+      }
+
+      this.menu.limit += this.optionsLimit
     },
 
     resetSearchQuery() {
