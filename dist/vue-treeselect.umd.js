@@ -1,5 +1,5 @@
 /*!
- * vue-treeselect v0.4.0 | (c) 2017-2024 Riophae Lee
+ * vue-treeselect v0.4.0 | (c) 2017-2025 Riophae Lee
  * Released under the MIT License.
  * https://vue-treeselect.js.org/
  */
@@ -2580,9 +2580,13 @@ var instanceId = 0;
       node.isHighlighted = true;
       if (this.menu.isOpen && scroll) {
         var scrollToOption = function scrollToOption() {
-          var nodeId = node.id.toString().replace(/"/g, '\\"');
+          var nodeId = node.id.toString().replace(/\n/g, ' ').replace(/"/g, '\\"');
           var $menu = _this14.getMenu();
-          var $option = $menu.querySelector(".vue-treeselect__option[data-id=\"".concat(nodeId, "\"]"));
+          var $options = $menu.querySelectorAll('.vue-treeselect__option');
+          var $option = Array.from($options).find(function (el) {
+            var dataId = el.getAttribute('data-id');
+            return dataId && dataId.replace(/[\n\r]/g, ' ') === nodeId;
+          });
           if ($option) scrollIntoView($menu, $option);
         };
         if (this.getMenu()) {

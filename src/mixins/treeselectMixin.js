@@ -1441,9 +1441,15 @@ export default {
 
       if (this.menu.isOpen && scroll) {
         const scrollToOption = () => {
-          const nodeId = node.id.toString().replace(/"/g, '\\"')
+          const nodeId = node.id.toString().replace(/\n/g, ' ').replace(/"/g, '\\"')
           const $menu = this.getMenu()
-          const $option = $menu.querySelector(`.vue-treeselect__option[data-id="${nodeId}"]`)
+
+          const $options = $menu.querySelectorAll('.vue-treeselect__option')
+          const $option = Array.from($options).find(el => {
+            const dataId = el.getAttribute('data-id')
+            return dataId && dataId.replace(/[\n\r]/g, ' ') === nodeId
+          })
+
           if ($option) scrollIntoView($menu, $option)
         }
 
